@@ -1,0 +1,53 @@
+<%- include('../templates/header') %>
+
+<main>
+    <section class="container page-section">
+        <div class="dashboard-header">
+            <h1 class="page-title">Gestionar Usuarios</h1>
+            <a href="/admin/crear-usuario" class="btn btn-primary">Crear Nuevo Usuario</a>
+        </div>
+        
+        <div class="card" style="padding: 2rem; overflow-x: auto;">
+            <table class="user-table" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="text-align: left; border-bottom: 2px solid #eee;">
+                        <th style="padding: 0.75rem;">Nombre</th>
+                        <th style="padding: 0.75rem;">Email</th>
+                        <th style="padding: 0.75rem;">Rol</th>
+                        <th style="padding: 0.75rem;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (usuarios && usuarios.length > 0) { %>
+                        <% usuarios.forEach(u => { %>
+                            <tr style="border-bottom: 1px solid #f4f4f4;">
+                                <td style="padding: 0.75rem;"><%= u.nombre %></td>
+                                <td style="padding: 0.75rem;"><%= u.email %></td>
+                                <td style="padding: 0.75rem;"><%= u.role.charAt(0).toUpperCase() + u.role.slice(1) %></td>
+                                <td style="padding: 0.75rem; white-space: nowrap;">
+                                    
+                                    <a href="/admin/editar-usuario/<%= u._id %>" class="btn btn-secondary btn-sm" style="margin-right: 5px;">Editar</a>
+                                    
+                                    <form action="/admin/eliminar-usuario/<%= u._id %>" method="POST" style="display: inline;" 
+                                          onsubmit="return confirm('¿Estás seguro de que deseas eliminar a <%= u.nombre %>? Esta acción no se puede deshacer.');">
+                                        
+                                        <% if (usuario.id !== u.id) { %>
+                                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                                        <% } %>
+                                    </form>
+
+                                </td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="4" style="padding: 1rem; text-align: center;">No hay usuarios registrados.</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<%- include('../templates/footer') %>

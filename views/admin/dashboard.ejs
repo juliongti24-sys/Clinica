@@ -1,0 +1,52 @@
+<%- include('../templates/header') %> <main>
+    <section class="container page-section">
+        <h1 class="page-title">Panel de Administrador</h1>
+        <p style="margin-bottom: 2rem; font-size: 1.2rem;">Bienvenido, <strong><%= usuario.nombre %></strong>.</p>
+
+        <h2 class="section-title">Gestión de Usuarios</h2>
+        <div class="appointment-list">
+            <div class="card appointment-card">
+                <div class="appointment-details">
+                    <p class="appointment-doctor">Crear Nuevo Usuario</p>
+                    <p class="appointment-specialty">Registra un nuevo Médico, Recepcionista o Administrador en el sistema.</p>
+                </div>
+                <div class="appointment-actions">
+                    <a href="/admin/crear-usuario" class="btn btn-primary">Crear</a>
+                </div>
+            </div>
+
+            <div class="card appointment-card">
+                <div class="appointment-details">
+                    <p class="appointment-doctor">Gestionar Usuarios</p>
+                    <p class="appointment-specialty">Ver, editar o eliminar perfiles de médicos, recepcionistas y pacientes.</p>
+                </div>
+                <div class="appointment-actions">
+                    <a href="/admin/gestionar-usuarios" class="btn btn-primary">Gestionar</a>
+                </div>
+            </div>
+
+            <div class="card appointment-card">
+                <div class="appointment-details">
+                    <p class="appointment-doctor">Agendar Cita para Paciente</p>
+                    <p class="appointment-specialty">Agenda una nueva cita para cualquier paciente con cualquier médico del sistema.</p>
+                </div>
+                <div class="appointment-actions">
+                    <a href="/manage/agendar" class="btn btn-primary">Agendar</a>
+                </div>
+            </div>
+
+            <div class="card appointment-card">
+                <div class="appointment-details">
+                    <p class="appointment-doctor">Gestionar Citas del Sistema</p>
+                    <p class="appointment-specialty">Ver, modificar o cancelar todas las citas agendadas en la clínica.</p>
+                </div>
+                <div class="appointment-actions">
+                    <a href="/manage/gestionar-citas" class="btn btn-primary">Gestionar</a>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>
+
+<%- include('../templates/footer') %> 

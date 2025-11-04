@@ -1,0 +1,42 @@
+<%- include('templates/header') %>
+<div class="container page-section">
+    <h1 class="page-title">Registro de Paciente</h1>
+    <div class="card">
+        <form action="/register" method="POST" class="form-step active">
+            <div class="form-group">
+                <label for="nombre">Nombre Completo</label>
+                <input type="text" id="nombre" name="nombre" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="direccion">Dirección</label>
+                <input type="text" id="direccion" name="direccion" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="telefono">Teléfono</label>
+                <input type="tel" id="telefono" name="telefono" class="form-control" required>
+            </div>
+            
+            <hr>
+            <div class="form-group">
+                <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                <input type="date" id="fechaNacimiento" name="fechaNacimiento" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="numeroSeguro">Número de Seguro</label>
+                <input type="text" id="numeroSeguro" name="numeroSeguro" class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Crear Cuenta</button>
+            <p>¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p>
+        </form>
+    </div>
+</div>
+<%- include('templates/footer') %>

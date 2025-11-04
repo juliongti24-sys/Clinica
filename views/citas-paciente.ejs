@@ -1,0 +1,65 @@
+<%- include('templates/header') %> 
+    <main>
+        <section class="container page-section">
+            <div class="dashboard-header">
+                <h1 class="page-title">Hola, <%= usuario.nombre.split(' ')[0] %></h1> 
+                <a href="/agendar" class="btn btn-primary">Agendar Nueva Cita</a> 
+            </div>
+
+            <h2 class="section-title">Próximas Citas</h2>
+            <div class="appointment-list">
+                
+                <% if (proximasCitas && proximasCitas.length > 0) { %>
+                    <% proximasCitas.forEach(cita => { %>
+                        <div class="card appointment-card">
+                            <div class="appointment-details">
+                                <p class="appointment-date">
+                                    <strong><%= new Date(cita.fecha).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }).toUpperCase() %> - <%= cita.hora %></strong>
+                                </p>
+                                <p class="appointment-doctor"><%= cita.medico.nombre %></p> 
+                                <p class="appointment-specialty"><%= cita.medico.especialidad %></p> 
+                            </div>
+                            <div class="appointment-actions">
+                                <a href="/citas/modificar/<%= cita._id %>" class="btn btn-secondary">Modificar</a>
+                                
+                                <form action="/citas/cancelar/<%= cita._id %>" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas cancelar esta cita?');" style="display: inline;">
+                                    <button type="submit" class="btn btn-danger">Cancelar</button>
+                                </form>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p>No tienes próximas citas agendadas.</p>
+                <% } %>
+                
+            </div>
+
+            <h2 class="section-title">Citas Anteriores</h2>
+            <div class="appointment-list">
+                
+                <% if (citasAnteriores && citasAnteriores.length > 0) { %>
+                    <% citasAnteriores.forEach(cita => { %>
+                        <div class="card appointment-card past"> 
+                            <div class="appointment-details">
+                                <p class="appointment-date">
+                                    <strong><%= new Date(cita.fecha).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }).toUpperCase() %> - <%= cita.hora %></strong>
+                                </p>
+                                <p class="appointment-doctor"><%= cita.medico.nombre %></p> 
+                                <p class="appointment-specialty"><%= cita.medico.especialidad %></p> 
+                            </div>
+                            <div class="appointment-actions">
+                                <a href="#" class="btn btn-secondary">Ver Resumen</a>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p>No tienes citas anteriores.</p>
+                <% } %>
+
+            </div>
+        </section>
+    </main>
+
+    
+    <script src="/js/main.js"></script>
+<%- include('templates/footer') %> 

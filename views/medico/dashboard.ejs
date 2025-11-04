@@ -1,0 +1,66 @@
+<%- include('../templates/header') %> <main>
+    <section class="container page-section">
+        <div class="dashboard-header">
+            <h1 class="page-title">Mi Agenda</h1>
+            <p style="font-size: 1.2rem; margin-top: -1rem; margin-bottom: 2rem;">
+                Bienvenido, Dr. <%= usuario.nombre.split(' ')[0] %>
+            </p>
+        </div>
+
+        <h2 class="section-title">Citas de Hoy (<%= new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }) %>)</h2>
+        <div class="appointment-list">
+            
+            <% if (citasHoy && citasHoy.length > 0) { %>
+                <% citasHoy.forEach(cita => { %>
+                    <div class="card appointment-card">
+                        <div class="appointment-details">
+                            <p class="appointment-date">
+                                <strong><%= cita.hora %></strong>
+                            </p>
+                            <p class="appointment-doctor"><%= cita.paciente.nombre %></p>
+                            <p class="appointment-specialty" style="color: #333;">
+                                Motivo: <%= cita.motivo || 'No especificado' %>
+                            </p>
+                            <p class="appointment-specialty" style="font-size: 0.9rem; color: #555;">
+                                Teléfono: <%= cita.paciente.telefono %>
+                            </p>
+                        </div>
+                        <div class="appointment-actions">
+                            <a href="#" class="btn btn-secondary btn-sm disabled">Ver Ficha</a>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>No tienes citas agendadas para hoy.</p>
+            <% } %>
+        </div>
+
+        <h2 class="section-title" style="margin-top: 2.5rem;">Próximas Citas</h2>
+        <div class="appointment-list">
+
+            <% if (citasFuturas && citasFuturas.length > 0) { %>
+                <% citasFuturas.forEach(cita => { %>
+                    <div class="card appointment-card">
+                        <div class="appointment-details">
+                            <p class="appointment-date">
+                                <strong><%= new Date(cita.fecha).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' }) %> - <%= cita.hora %></strong>
+                            </p>
+                            <p class="appointment-doctor"><%= cita.paciente.nombre %></p>
+                            <p class="appointment-specialty">
+                                Motivo: <%= cita.motivo || 'No especificado' %>
+                            </p>
+                        </div>
+                        <div class="appointment-actions">
+                            <a href="#" class="btn btn-secondary btn-sm disabled">Ver Ficha</a>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>No tienes más citas futuras agendadas.</p>
+            <% } %>
+        </div>
+
+    </section>
+</main>
+
+<%- include('../templates/footer') %>

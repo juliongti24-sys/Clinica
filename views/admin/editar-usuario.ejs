@@ -1,0 +1,41 @@
+<%- include('../templates/header') %>
+
+<main>
+    <section class="container page-section">
+        <h1 class="page-title">Editar Usuario</h1>
+        
+        <div class="booking-form-container card">
+            
+            <form id="editUserForm" action="/admin/editar-usuario/<%= u._id %>" method="POST" class="form-step active" style="padding: 2rem;">
+
+                <hr>
+                <h2 style="font-size: 1.2rem; margin-bottom: 1rem;">Datos Personales</h2>
+
+                <div class="form-group">
+                    <label for="nombre">Nombre Completo</label>
+                    <input type="text" id="nombre" name="nombre" class="form-control" value="<%= u.nombre %>" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" class="form-control" value="<%= u.email %>" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="direccion">Dirección</label>
+                    <input type="text" id="direccion" name="direccion" class="form-control" value="<%= u.direccion %>" required>
+                </div>
+                <div class="form-group">
+                    <label for="telefono">Teléfono</label>
+                    <input type="tel" id="telefono" name="telefono" class="form-control" value="<%= u.telefono %>" required>
+                </div>
+                
+                <div style="margin-top: 1.5rem; display: flex; justify-content: space-between;">
+                    <a href="/admin/gestionar-usuarios" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+
+<%- include('../templates/footer') %>

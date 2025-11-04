@@ -1,0 +1,79 @@
+<%- include('templates/header') %> 
+
+    <main>
+        <section class="container page-section">
+            <h1 class="page-title">Agenda una Nueva Cita</h1> [cite: 21]
+            <div class="booking-form-container card">
+                
+                <form id="bookingForm" action="/agendar" method="POST">
+                
+                    <div id="step1" class="form-step active"> [cite: 21]
+                        <h2>Paso 1: Elige una especialidad</h2>
+                        <div class="form-group"> [cite: 22]
+                            <label for="specialty">Especialidad</label>
+                            
+                            <select id="specialty" name="specialty" class="form-control" required> [cite: 22]
+                                <option value="">Selecciona una especialidad...</option>
+                                
+                                <% if (typeof especialidades !== 'undefined' && especialidades.length > 0) { %>
+                                    <% especialidades.forEach(esp => { %>
+                                        <option value="<%= esp %>"><%= esp %></option>
+                                    <% }); %>
+                                <% } %>
+                            
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="nextStep(2)">Siguiente</button>
+                    </div>
+
+                    <div id="step2" class="form-step"> [cite: 25]
+                        <h2>Paso 2: Elige médico y fecha</h2>
+                        <div class="form-group">
+                            <label for="doctor">Médico</label>
+                            
+                            <select id="doctor" name="doctor" class="form-control" required> [cite: 26]
+                                <option value="">Selecciona una especialidad primero...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="date">Fecha</label>
+                            <input type="date" id="date" name="date" class="form-control" required> [cite: 29]
+                        </div>
+                        
+                        <div class="time-slots" id="timeSlotsContainer">
+                            <p>Horas disponibles:</p>
+                            </div>
+                        
+                        <input type="hidden" id="selectedTime" name="time" required>
+                        
+                        <button type="button" class="btn btn-secondary" onclick="prevStep(1)">Anterior</button>
+                        <button type="button" class="btn btn-primary" onclick="nextStep(3)">Siguiente</button>
+                    </div>
+
+                    <div id="step3" class="form-step"> [cite: 32]
+                        <h2>Paso 3: Confirma tu cita</h2>
+                        
+                        <div class="summary">
+                            <p><strong>Especialidad:</strong> <span id="summary-specialty">...</span></p>
+                            <p><strong>Médico:</strong> <span id="summary-doctor">...</span></p>
+                            <p><strong>Fecha y Hora:</strong> <span id="summary-datetime">...</span></p>
+                            <p><strong>Paciente:</strong> <%= usuario.nombre %></p>
+                        </div>
+                        <div class="form-group"> [cite: 34]
+                            <label for="reason">Motivo de la consulta (opcional)</label>
+                            <textarea id="reason" name="reason" rows="3" class="form-control"></textarea> [cite: 34]
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="prevStep(2)">Anterior</button> [cite: 35]
+                        
+                        <button type="submit" class="btn btn-primary">Confirmar Cita</button>
+                    </div>
+
+                </form> </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        </footer>
+    
+    <script src="/js/agendar.js?v=1.1"></script>
+<%- include('templates/footer') %> 

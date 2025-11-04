@@ -1,0 +1,375 @@
+/* --- Variables y Estilos Globales --- */
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --text-color: #212529;
+    --font-family: 'Lato', sans-serif;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+body {
+    font-family: var(--font-family);
+    margin: 0;
+    background-color: #fdfdff;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* --- Encabezado y Navegación --- */
+.main-header {
+    background-color: #fff;
+    border-bottom: 1px solid #e9ecef;
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.main-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: var(--dark-color);
+    text-decoration: none;
+}
+
+.logo strong {
+    color: var(--primary-color);
+}
+
+.main-nav a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    margin: 0 15px;
+    transition: color 0.3s ease;
+}
+
+.main-nav a:hover, .main-nav a.active {
+    color: var(--primary-color);
+}
+
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 2em;
+    cursor: pointer;
+}
+
+/* --- Botones --- */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    display: inline-block;
+    color: #fff;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+.btn-danger {
+    background-color: transparent;
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+}
+.btn-danger:hover {
+    background-color: #dc3545;
+    color: #fff;
+}
+.btn-lg {
+    padding: 15px 30px;
+    font-size: 1.1em;
+}
+
+/* --- Hero Section (Página de Inicio) --- */
+.hero {
+    background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)), url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=2070&auto=format&fit=crop') no-repeat center center/cover;
+    text-align: center;
+    padding: 100px 0;
+}
+
+.hero h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+    color: var(--dark-color);
+}
+
+.hero p {
+    font-size: 1.2em;
+    color: var(--secondary-color);
+    max-width: 600px;
+    margin: 0 auto 30px auto;
+}
+
+/* --- Features Section --- */
+.features {
+    padding: 80px 0;
+}
+.features .container {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    gap: 30px;
+}
+.feature-item {
+    max-width: 300px;
+}
+.feature-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 15px;
+}
+
+/* --- Footer --- */
+.main-footer {
+    background-color: var(--dark-color);
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 50px;
+}
+
+/* --- Componentes Generales (Cards, Forms) --- */
+.card {
+    background-color: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.page-section {
+    padding: 50px 0;
+}
+
+.page-title {
+    font-size: 2.5em;
+    margin-bottom: 30px;
+}
+
+.section-title {
+    font-size: 1.8em;
+    color: var(--dark-color);
+    margin-top: 40px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
+    display: inline-block;
+}
+
+/* --- Formulario de Agendamiento --- */
+.booking-form-container {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.form-step {
+    display: none;
+}
+.form-step.active {
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ced4da;
+    border-radius: var(--border-radius);
+    font-size: 1em;
+}
+
+.time-slots {
+    margin-top: 20px;
+}
+.time-slot-btn {
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    color: var(--primary-color);
+    margin: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
+}
+.time-slot-btn:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+.time-slot-btn.disabled {
+    background-color: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+
+.summary p {
+    font-size: 1.1em;
+    line-height: 1.8;
+}
+
+/* --- Dashboard --- */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.appointment-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.appointment-card.past {
+    opacity: 0.7;
+    background-color: var(--light-color);
+}
+
+.appointment-date {
+    color: var(--primary-color);
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+.appointment-doctor {
+    font-size: 1.3em;
+    font-weight: 700;
+    margin: 0 0 5px 0;
+}
+.appointment-specialty {
+    color: var(--secondary-color);
+    margin: 0;
+}
+.appointment-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.btn-link-danger {
+    color: var(--danger-color);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+/* --- Responsividad --- */
+@media (max-width: 768px) {
+    .main-nav {
+        display: none; /* Ocultar menú en móvil */
+    }
+    .mobile-menu-btn {
+        display: block; /* Mostrar botón de hamburguesa */
+    }
+    .hero h1 {
+        font-size: 2.2em;
+    }
+    .features .container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .dashboard-header, .appointment-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+}
+
+/* --- Estilos para el Menú Móvil --- */
+
+/* Oculta el botón de hamburguesa en pantallas grandes */
+.mobile-menu-btn {
+    display: none;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #333; /* Ajusta el color si es necesario */
+}
+
+/* Media Query para pantallas pequeñas (ej. 768px o menos) */
+@media (max-width: 768px) {
+
+    /* Oculta la navegación normal de escritorio */
+    .main-nav {
+        display: none; /* Oculto por defecto en móvil */
+        
+        /* Posicionamiento para que aparezca como un menú desplegable */
+        position: absolute;
+        top: 60px; /* Ajusta esto a la altura de tu header */
+        left: 0;
+        right: 0;
+        background-color: #ffffff;
+        width: 100%;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        z-index: 1000;
+        
+        /* Apila los enlaces verticalmente */
+        flex-direction: column;
+    }
+
+    /* ¡Esta es la clase que añade el JS! */
+    .main-nav.active {
+        display: flex; /* Lo hace visible */
+    }
+
+    /* Estilos para los enlaces dentro del menú móvil */
+    .main-nav a {
+        padding: 1rem;
+        text-align: center;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    /* Muestra el botón de hamburguesa solo en móvil */
+    .mobile-menu-btn {
+        display: block;
+    }
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar Nueva Cita - Clínica Bienestar</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+    <div class="container">
+        <a href="/" class="logo">Clínica <strong>Bienestar</strong></a>
+        <nav class="main-nav">
+        
+        <% if (typeof usuario !== 'undefined' && usuario) { %>
+            
+            <% if (usuario.role === 'paciente') { %>
+                <a href="/citas/paciente">Mis Citas</a>
+            <% } else if (usuario.role === 'medico') { %>
+                <a href="/medico/dashboard">Mi Agenda</a>
+            <% } else if (usuario.role === 'administrador') { %>
+                <a href="/admin/dashboard">Panel Admin</a>
+            <% } else if (usuario.role === 'recepcionista') { %>
+                <a href="/recepcionista/dashboard">Panel Recepcionista</a>
+            <% } %>
+            
+            <a href="/docs/manual_usuario.pdf" download>
+                Descargar Manual de Usuario (PDF)
+            </a>            
+            <a href="/logout" class="btn btn-secondary"><%= usuario.nombre.split(' ')[0] %> (Salir)</a>
+        
+        <% } else { %>
+            
+            <a href="/login" class="btn btn-primary">Iniciar Sesión</a>
+            <a href="/register" class="btn btn-secondary">Registrarse</a>
+            
+        <% } %>
+        
+        </nav>
+        <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+    </div>
+</header>

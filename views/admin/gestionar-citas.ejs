@@ -1,0 +1,73 @@
+<%- include('../templates/header') %>
+
+<main>
+    <section class="container page-section">
+        <div class="dashboard-header">
+            <h1 class="page-title">Gestionar Todas las Citas</h1>
+            <a href="/manage/agendar" class="btn btn-primary">Agendar Cita Nueva</a>
+        </div>
+        
+        <div class="card" style="padding: 2rem; overflow-x: auto;">
+            <table class="user-table" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="text-align: left; border-bottom: 2px solid #eee;">
+                        <th style="padding: 0.75rem;">Fecha y Hora</th>
+                        <th style="padding: 0.75rem;">Paciente</th>
+                        <th style="padding: 0.75rem;">Médico</th>
+                        <th style="padding: 0.75rem;">Especialidad</th>
+                        <th style="padding: 0.75rem;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+    <% if (citas && citas.length > 0) { %>
+        <% citas.forEach(cita => { %>
+            <tr style="border-bottom: 1px solid #f4f4f4;">
+                <td style="padding: 0.75rem;">
+                    <%= new Date(cita.fecha).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' }) %>
+                    <br>
+                    <strong><%= cita.hora %></strong>
+                </td>
+                
+                <td style="padding: 0.75rem;">
+                    <% if (cita.paciente) { %>
+                        <%= cita.paciente.nombre %>
+                    <% } else { %>
+                        <span style="color: red; font-style: italic;">(Paciente Eliminado)</span>
+                    <% } %>
+                </td>
+                <td style="padding: 0.75rem;">
+                    <% if (cita.medico) { %>
+                        <%= cita.medico.nombre %>
+                    <% } else { %>
+                        <span style="color: red; font-style: italic;">(Médico Eliminado)</span>
+                    <% } %>
+                </td>
+                <td style="padding: 0.75rem;">
+                    <% if (cita.medico && cita.medico.especialidad) { %>
+                        <%= cita.medico.especialidad %>
+                    <% } else { %>
+                        <span style="color: red;">N/A</span>
+                    <% } %>
+                </td>
+                <td style="padding: 0.75rem; white-space: nowrap;">
+                    <a href="/manage/editar-cita/<%= cita._id %>" class="btn btn-secondary btn-sm" style="margin-right: 5px;">Editar</a>
+                    
+                    <form action="/manage/cancelar-cita/<%= cita._id %>" method="POST" style="display: inline;" 
+                          onsubmit="return confirm('¿Estás seguro de que deseas cancelar esta cita?');">
+                        <button type="submit" class="btn btn-danger">Cancelar</button>
+                    </form>
+                </td>
+            </tr>
+        <% }); %>
+    <% } else { %>
+        <tr>
+            <td colspan="5" style="padding: 1rem; text-align: center;">No hay próximas citas en el sistema.</td>
+        </tr>
+    <% } %>
+</tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<%- include('../templates/footer') %>
