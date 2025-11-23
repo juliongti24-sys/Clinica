@@ -3,6 +3,9 @@ const router = express.Router();
 const Usuario = require('../models/Usuario');
 const { requireAdmin } = require('../middleware/authMiddleware'); // <-- Usamos requireAdmin
 const upload = require('../middleware/subirArchivo');
+const fs = require('fs');
+const path = require('path');
+    
 
 // Solo Admins pueden gestionar usuarios
 router.use(requireAdmin);
@@ -56,66 +59,96 @@ router.get('/editar-usuario/:id', async (req, res) => {
 });
 
 // RUTA PARA PROCESAR LA ACTUALIZACIÓN (UPDATE - PARTE 2)
-router.post('/editar-usuario/:id',upload.single('foto'), async (req, res) => {
+router.post('/editar-usuario/:id', upload.single('foto'), async (req, res) => {
     const id = req.params.id;
-    // 1. Extraemos TODOS los datos del formulario 
+    // Extraemos datos
     const { nombre, email, direccion, telefono, role, especialidad, cedula, password } = req.body;
 
     try {
-        // 2. Preparamos el objeto de actualización
-        const updateData = {
-            nombre,
-            email,
-            direccion,
-            telefono,
-            role,
-            especialidad: (role === 'medico') ? especialidad : undefined,
-            cedula: (role === 'medico') ? cedula : undefined, 
-            fotoPerfil: req.file.filename
-        };
-
-        // 3. Lógica para manejar la contraseña 
-        
-        // Si el campo password NO está vacío, hay que hashearla
-        if (password && password.trim() !== '') {
-            // Para que el 'pre-save' hook (que cifra) funcione,
-            // usamos .findById() y luego .save()
-            
-            const usuario = await Usuario.findById(id);
-            if (!usuario) {
-                return res.status(404).send("Usuario no encontrado.");
-            }
-            
-            // Actualiza,os los campos en el objeto de Mongoose
-            usuario.set(updateData);
-            usuario.password = password; // Asigna la nueva contraseña (sin hashear)
-            
-            // Al guardar, el hook 'pre-save' se disparará y la cifrará
-            await usuario.save(); 
-
-        } else {
-            // Si el campo password está VACÍO, no tocamos la contraseña.
-            // Usamos 'findByIdAndUpdate' que es más directo.
-            // Le pasamos { runValidators: true } para que falle si
-            // los campos (como email) no son válidos.
-            await Usuario.findByIdAndUpdate(id, updateData, { runValidators: true });
+        const usuario = await Usuario.findById(id);
+        if (!usuario) {
+            return res.status(404).send("Usuario no encontrado.");
         }
 
-        // 4. Si todo salió bien, redirigimos
+        // ACTUALIZACIÓN SEGURA:
+        // Solo actualizamos si el campo viene en el formulario.
+        // Si 'role' llega undefined, mantenemos 'usuario.role' original.
+        if (nombre) usuario.nombre = nombre;
+        if (email) usuario.email = email;
+        if (direccion) usuario.direccion = direccion;
+        if (telefono) usuario.telefono = telefono;
+        
+        // Aquí estaba el error: Si role era undefined, la app fallaba.
+        if (role) usuario.role = role; 
+
+        if (role === 'medico') {
+            if (especialidad) usuario.especialidad = especialidad;
+            if (cedula) usuario.cedula = cedula;
+        }
+
+        // Lógica de Foto
+        if (req.file) {
+            if (usuario.fotoPerfil && usuario.fotoPerfil !== 'default.jpg') {
+                const rutaImagenAnterior = path.join(__dirname, '../public/images', usuario.fotoPerfil);
+                if (fs.existsSync(rutaImagenAnterior)) {
+                    try { fs.unlinkSync(rutaImagenAnterior); } catch(e) { console.log(e); }
+                }
+            }
+            usuario.fotoPerfil = req.file.filename;
+        }
+
+        // Lógica de Contraseña
+        if (password && password.trim() !== '') {
+            usuario.password = password;
+        }
+
+        await usuario.save();
         res.redirect('/admin/gestionar-usuarios');
 
     } catch (error) {
-        // Si hay un error (ej: email duplicado), se mostrará
-        console.error("Error al actualizar usuario:", error);
+        console.error("Error al actualizar:", error);
+        // Tip: Muestra el error en pantalla para que sepas qué pasó
         res.status(500).send("Error al actualizar: " + error.message);
     }
 });
 
 // RUTA PARA ELIMINAR UN USUARIO (DELETE)
+// RUTA ACTUALIZADA: POST /eliminar-usuario/:id
 router.post('/eliminar-usuario/:id', async (req, res) => {
-    if (req.params.id === req.session.userId) return res.status(403).send("No puedes eliminarte.");
-    await Usuario.findByIdAndDelete(req.params.id);
-    res.redirect('/admin/gestionar-usuarios');
+    const id = req.params.id;
+    const adminId = req.session.userId; // ID del admin que está haciendo la acción
+
+    try {
+        // Evitar que el admin se borre a sí mismo
+        if (id === adminId) {
+            return res.status(403).send("No puedes eliminar tu propia cuenta de administrador aquí.");
+        }
+
+        // 1. Primero buscamos al usuario para obtener el nombre de su foto
+        const usuarioAEliminar = await Usuario.findById(id);
+
+        if (usuarioAEliminar) {
+            // --- LÓGICA DE BORRADO DE FOTO ---
+            if (usuarioAEliminar.fotoPerfil && usuarioAEliminar.fotoPerfil !== 'default.jpg') {
+                const rutaImagen = path.join(__dirname, '../public/images', usuarioAEliminar.fotoPerfil);
+                
+                // Verificar si el archivo existe físicamente y borrarlo
+                if (fs.existsSync(rutaImagen)) {
+                    fs.unlinkSync(rutaImagen);
+                }
+            }
+            // ---------------------------------
+
+            // 2. Ahora sí, borramos el registro de la Base de Datos
+            await Usuario.findByIdAndDelete(id);
+        }
+
+        res.redirect('/admin/gestionar-usuarios');
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error al eliminar el usuario.");
+    }
 });
 
 module.exports = router;

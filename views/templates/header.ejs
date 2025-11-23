@@ -32,7 +32,7 @@
                 Descargar Manual de Usuario (PDF)
             </a>            
             <a href="/perfil" class="profile-avatar-link">
-                <img src="/images/<%= usuario.fotoPerfil%>" alt="Foto de perfil" class="profile-avatar">
+                <img src="/images/<%= usuario.fotoPerfil  || 'default.jpg'%>" alt="Foto de perfil" class="profile-avatar">
             </a>      
             <a href="/logout" class="btn btn-secondary"><%= usuario.nombre.split(' ')[0] %> (Salir)</a>
             <% } else { %>

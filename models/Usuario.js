@@ -40,6 +40,7 @@ const usuarioSchema = new Schema({
     // FOTO DE PERFIL   
     fotoPerfil: { 
         type: String, 
+        default: 'default.jpg' // Opcional: una imagen por defecto si no suben nada
     },
 
     // --- Campos Específicos (Opcionales) ---

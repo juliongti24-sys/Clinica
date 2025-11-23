@@ -8,7 +8,8 @@ const Usuario = require('../models/Usuario');
 //Importamos la funciión que nos permite subir los archivos
 const upload = require('../middleware/subirArchivo');
 
-
+const fs = require('fs');
+const path = require('path');
 // --- RUTAS DE PACIENTE ---
 
 // Dashboard del Paciente
@@ -327,6 +328,19 @@ router.post('/perfil', upload.single('foto'), async (req, res) => {
 
         // Actualizamos la foto SOLO si se subió una nueva
         if (req.file) {
+            // 1. Verificamos si tiene una foto anterior y que NO sea la default
+            if (usuario.fotoPerfil && usuario.fotoPerfil !== 'default.jpg') {
+                
+                // 2. Construimos la ruta física al archivo antiguo
+                const rutaImagenAnterior = path.join(__dirname, '../public/images', usuario.fotoPerfil);
+                
+                // 3. Verificamos si el archivo existe y lo borramos
+                if (fs.existsSync(rutaImagenAnterior)) {
+                    fs.unlinkSync(rutaImagenAnterior); // Borrado físico
+                }
+            }
+
+            // 4. Asignamos la nueva foto
             usuario.fotoPerfil = req.file.filename;
         }
 
