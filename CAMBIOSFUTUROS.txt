@@ -1,0 +1,11 @@
+Cómo subir cambios futuros: A partir de ahora, cada vez que hagas cambios, 
+el proceso es mucho más corto:
+
+# 1. Añade los archivos cambiados
+git add .
+
+# 2. Guarda los cambios con un mensaje
+git commit -m "Añadí la función X"
+
+# 3. Sube los cambios (¡ya no necesitas todo lo demás!)
+git push

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Usuario = require('../models/Usuario');
 const { redirectIfLoggedIn } = require('../middleware/authMiddleware');
-
+const upload = require('../middleware/subirArchivo');
 
 // Aplicar el middleware 'redirectIfLoggedIn'
 router.get('/login', redirectIfLoggedIn, (req, res) => {
@@ -25,7 +25,7 @@ router.get('/logout', (req, res) => {
 // --- LÓGICA (POST) ---
 
 // 1. REGISTRO DE PACIENTE
-router.post('/register', async (req, res) => {
+router.post('/register', upload.single('foto'), async (req, res) => {
     const { nombre, email, password, direccion, telefono, fechaNacimiento, numeroSeguro } = req.body;
 
     try {
@@ -37,9 +37,9 @@ router.post('/register', async (req, res) => {
             telefono,
             fechaNacimiento,
             numeroSeguro,
-            role: 'paciente' // <-- Rol asignado automáticamente
-        });
-        
+            role: 'paciente', // <-- Rol asignado automáticamente
+            fotoPerfil: req.file.filename
+        });        
         await usuario.save();
         
         // Iniciar sesión automáticamente

@@ -2,7 +2,7 @@
 <div class="container page-section">
     <h1 class="page-title">Registro de Paciente</h1>
     <div class="card">
-        <form action="/register" method="POST" class="form-step active">
+        <form action="/register" method="POST" class="form-step active" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="nombre">Nombre Completo</label>
                 <input type="text" id="nombre" name="nombre" class="form-control" required>
@@ -32,6 +32,11 @@
             <div class="form-group">
                 <label for="numeroSeguro">Número de Seguro</label>
                 <input type="text" id="numeroSeguro" name="numeroSeguro" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="foto">Foto de perfil</label>
+                <input type="file" name = "foto" id="foto" class="form-control mb-3" required>
             </div>
 
             <button type="submit" class="btn btn-primary">Crear Cuenta</button>

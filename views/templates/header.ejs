@@ -31,9 +31,11 @@
             <a href="/docs/manual_usuario.pdf" download>
                 Descargar Manual de Usuario (PDF)
             </a>            
+            <a href="/perfil" class="profile-avatar-link">
+                <img src="/images/<%= usuario.fotoPerfil%>" alt="Foto de perfil" class="profile-avatar">
+            </a>      
             <a href="/logout" class="btn btn-secondary"><%= usuario.nombre.split(' ')[0] %> (Salir)</a>
-        
-        <% } else { %>
+            <% } else { %>
             
             <a href="/login" class="btn btn-primary">Iniciar Sesión</a>
             <a href="/register" class="btn btn-secondary">Registrarse</a>

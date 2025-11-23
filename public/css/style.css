@@ -184,6 +184,9 @@ body {
 .page-title {
     font-size: 2.5em;
     margin-bottom: 30px;
+    display: flex;
+    align-self: auto;
+    justify-content: center;
 }
 
 .section-title {
@@ -301,6 +304,29 @@ body {
     font-weight: 700;
 }
 
+
+/*AVATAR*/
+/* Contenedor del enlace */
+.profile-avatar-link {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+    text-decoration: none;
+}
+
+.profile-avatar {
+    width: 40px;      
+    height: 40px;    
+    border-radius: 50%; 
+    object-fit: cover;  
+    border: 2px solid #fff; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+    transition: transform 0.2s ease;
+}
+
+.profile-avatar:hover {
+    transform: scale(1.1); 
+}
 /* --- Responsividad --- */
 @media (max-width: 768px) {
     .main-nav {

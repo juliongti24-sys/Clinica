@@ -37,6 +37,10 @@ const usuarioSchema = new Schema({
         enum: ['paciente', 'medico', 'recepcionista', 'administrador'],
         default: 'paciente'
     },
+    // FOTO DE PERFIL   
+    fotoPerfil: { 
+        type: String, 
+    },
 
     // --- Campos Específicos (Opcionales) ---
     
@@ -87,7 +91,6 @@ usuarioSchema.pre('save', async function(next) {
 });
 
 // --- Método para comparar contraseñas en el Login ---
-// Añadimos un método personalizado al modelo para usarlo en la ruta de login
 usuarioSchema.methods.compararPassword = async function(passwordFormulario) {
     try {
         return await bcrypt.compare(passwordFormulario, this.password);

@@ -5,20 +5,17 @@ const router = express.Router();
 const Cita = require('../models/Cita'); 
 const Usuario = require('../models/Usuario'); 
 
+//Importamos la funciión que nos permite subir los archivos
+const upload = require('../middleware/subirArchivo');
+
+
 // --- RUTAS DE PACIENTE ---
 
 // Dashboard del Paciente
 router.get('/dashboard/paciente', (req, res) => {
-    // 'res.locals.usuario' ya está disponible gracias al middleware 'checkUser'
     
     res.render('dashboard-paciente');
-    // res.send(`
-    //     <h1>Dashboard del Paciente</h1>
-    //     <p>Bienvenido, ${res.locals.usuario.nombre}</p>
-    //     <a href="/agendar">Agendar Cita</a>
-    //     <br>
-    //     <a href="/logout">Cerrar Sesión</a>
-    // `);
+
 });
 
 // Página para Agendar Cita
@@ -293,6 +290,70 @@ router.post('/citas/modificar/:id', async (req, res) => {
     } catch (error) {
         console.error("Error al modificar la cita:", error);
         res.status(500).send("Error al guardar los cambios.");
+    }
+});
+
+
+// ... (Tus otras rutas existentes) ...
+
+// --- PERFIL DE USUARIO (Cualquier rol) ---
+
+// VER PERFIL (GET)
+router.get('/perfil', async (req, res) => {
+    // El usuario ya está en res.locals gracias al middleware 'checkUser'
+    // pero para editar, es mejor traer una copia fresca de la base de datos
+    try {
+        const usuario = await Usuario.findById(req.session.userId);
+        res.render('perfil', { usuario });
+    } catch (error) {
+        res.status(500).send("Error al cargar el perfil");
+    }
+});
+
+//ACTUALIZAR PERFIL (POST)
+router.post('/perfil', upload.single('foto'), async (req, res) => {
+    try {
+        const userId = req.session.userId;
+        const { nombre, email, telefono, direccion, password } = req.body;
+
+        // Buscamos al usuario
+        const usuario = await Usuario.findById(userId);
+
+        // Actualizamos los campos básicos
+        usuario.nombre = nombre;
+        usuario.email = email;
+        usuario.telefono = telefono;
+        usuario.direccion = direccion;
+
+        // Actualizamos la foto SOLO si se subió una nueva
+        if (req.file) {
+            usuario.fotoPerfil = req.file.filename;
+        }
+
+        // Actualizamos la contraseña SOLO si el campo no está vacío
+        if (password && password.trim() !== "") {
+            usuario.password = password; 
+            // Al hacer .save(), el 'pre-save hook' de tu modelo hasheará la password automáticamente
+        }
+
+        // Guardamos los cambios
+        await usuario.save();
+
+        // Actualizamos la sesión o redirigimos
+        // (Dependiendo de cómo manejes el rol, redirige al dashboard correspondiente)
+        if (usuario.role === 'paciente') {
+            res.redirect('/dashboard/paciente');
+        } else if (usuario.role === 'medico') {
+            res.redirect('/medico/dashboard');
+        } else if (usuario.role === 'recepcionista') {
+            res.redirect('/recepcionista/dashboard');
+        } else {
+            res.redirect('/admin/dashboard');
+        }
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error al actualizar el perfil.");
     }
 });
 

@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Usuario = require('../models/Usuario');
 const { requireAdmin } = require('../middleware/authMiddleware'); // <-- Usamos requireAdmin
+const upload = require('../middleware/subirArchivo');
 
-// ¡Proteger TODAS las rutas de este archivo!
 // Solo Admins pueden gestionar usuarios
 router.use(requireAdmin);
 
@@ -18,7 +18,7 @@ router.get('/crear-usuario', (req, res) => {
 });
 
 // Lógica para crear el usuario (POST)
-router.post('/crear-usuario', async (req, res) => {
+router.post('/crear-usuario', upload.single('foto'),  async (req, res) => {
     // ... (Esta ruta se queda igual)
     try {
         const { nombre, email, password, direccion, telefono, role, especialidad, cedula } = req.body;
@@ -31,7 +31,9 @@ router.post('/crear-usuario', async (req, res) => {
             telefono: telefono,
             role: role,
             especialidad: (role === 'medico') ? especialidad : undefined,
-            cedula: (role === 'medico') ? cedula : undefined });
+            cedula: (role === 'medico') ? cedula : undefined,
+            fotoPerfil: req.file.filename
+}       );
         await nuevoUsuario.save();
         res.redirect('/admin/dashboard');
     } catch (error) {
@@ -54,7 +56,7 @@ router.get('/editar-usuario/:id', async (req, res) => {
 });
 
 // RUTA PARA PROCESAR LA ACTUALIZACIÓN (UPDATE - PARTE 2)
-router.post('/editar-usuario/:id', async (req, res) => {
+router.post('/editar-usuario/:id',upload.single('foto'), async (req, res) => {
     const id = req.params.id;
     // 1. Extraemos TODOS los datos del formulario 
     const { nombre, email, direccion, telefono, role, especialidad, cedula, password } = req.body;
@@ -68,7 +70,8 @@ router.post('/editar-usuario/:id', async (req, res) => {
             telefono,
             role,
             especialidad: (role === 'medico') ? especialidad : undefined,
-            cedula: (role === 'medico') ? cedula : undefined
+            cedula: (role === 'medico') ? cedula : undefined, 
+            fotoPerfil: req.file.filename
         };
 
         // 3. Lógica para manejar la contraseña 

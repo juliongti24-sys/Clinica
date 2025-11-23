@@ -6,7 +6,7 @@
         
         <div class="booking-form-container card">
             
-            <form id="editUserForm" action="/admin/editar-usuario/<%= u._id %>" method="POST" class="form-step active" style="padding: 2rem;">
+            <form id="editUserForm" action="/admin/editar-usuario/<%= u._id %>" method="POST" class="form-step active" style="padding: 2rem;" enctype="multipart/form-data">
 
                 <hr>
                 <h2 style="font-size: 1.2rem; margin-bottom: 1rem;">Datos Personales</h2>
@@ -28,7 +28,11 @@
                     <label for="telefono">Teléfono</label>
                     <input type="tel" id="telefono" name="telefono" class="form-control" value="<%= u.telefono %>" required>
                 </div>
-                
+            <div class="form-group">
+                <label for="foto">Foto de perfil</label>
+                <input type="file" name = "foto" id="foto" class="form-control mb-3" required>
+            </div>
+
                 <div style="margin-top: 1.5rem; display: flex; justify-content: space-between;">
                     <a href="/admin/gestionar-usuarios" class="btn btn-secondary">Cancelar</a>
                     <button type="submit" class="btn btn-primary">Guardar Cambios</button>
