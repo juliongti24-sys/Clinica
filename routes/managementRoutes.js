@@ -52,13 +52,18 @@ try {
 
 // --- RUTA 3: POST PARA CREAR LA CITA ---
 router.post('/agendar', async (req, res) => {
-    // ... (Copia la ruta 'POST /agendar' completa de adminRoutes.js aquí)
     try {
         const { pacienteId, doctor, date, time, reason } = req.body;
         if (!pacienteId) return res.status(400).send("No se seleccionó ningún paciente.");
+
+        //Verificar si el horario ya está reservado
         const citaExistente = await Cita.findOne({ medico: doctor, fecha: new Date(date), hora: time });
         if (citaExistente) return res.status(409).send("Error: Ese horario ya está reservado.");
         
+        //Verificar que el paciente no tenga otra cita a la misma hora
+        const citaPacienteExistente = await Cita.findOne({ paciente: pacienteId, fecha: new Date(date), hora: time });
+        if (citaPacienteExistente) return res.status(409).send("Error: El paciente ya tiene una cita a esa hora.");
+
         const nuevaCita = new Cita({ paciente: pacienteId, medico: doctor, fecha: new Date(date), hora: time, motivo: reason });
         await nuevaCita.save();
         
@@ -76,7 +81,6 @@ router.post('/agendar', async (req, res) => {
 
 // --- RUTA 4: MOSTRAR TODAS LAS CITAS (GESTIÓN) ---
 router.get('/gestionar-citas', async (req, res) => {
-    // ... (Copia la ruta 'GET /gestionar-citas' completa de adminRoutes.js aquí)
     try {
         const proximasCitas = await Cita.find({ fecha: { $gte: new Date().setHours(0,0,0,0) } })
             .populate('paciente', 'nombre')
@@ -91,7 +95,6 @@ router.get('/gestionar-citas', async (req, res) => {
 
 // --- RUTA 5: MOSTRAR FORMULARIO DE EDICIÓN ---
 router.get('/editar-cita/:id', async (req, res) => {
-    // ... (Copia la ruta 'GET /editar-cita/:id' completa de adminRoutes.js aquí)
     try {
         const cita = await Cita.findById(req.params.id).populate('paciente').populate('medico');
         if (!cita) return res.status(404).send("Cita no encontrada.");
@@ -105,7 +108,6 @@ router.get('/editar-cita/:id', async (req, res) => {
 
 // --- RUTA 6: PROCESAR ACTUALIZACIÓN DE CITA ---
 router.post('/editar-cita/:id', async (req, res) => {
-    // ... (Copia la ruta 'POST /editar-cita/:id' completa de adminRoutes.js aquí)
     try {
         const citaId = req.params.id;
         const { pacienteId, doctor, date, time, reason } = req.body; 
@@ -120,7 +122,6 @@ router.post('/editar-cita/:id', async (req, res) => {
 
 // --- RUTA 7: CANCELAR CITA ---
 router.post('/cancelar-cita/:id', async (req, res) => {
-    // ... (Copia la ruta 'POST /cancelar-cita/:id' completa de adminRoutes.js aquí)
     try {
         await Cita.findByIdAndDelete(req.params.id);
         res.redirect('/manage/gestionar-citas');
@@ -129,4 +130,27 @@ router.post('/cancelar-cita/:id', async (req, res) => {
     }
 });
 
+
+// --- RUTA 8: MARCAR CITA COMO COMPLETADA ---
+router.get('/cita-completada/:id', async (req, res) => {
+    try {
+        const citaId = req.params.id;
+        // Obtener la fecha y hora actuales
+        const ahora = new Date();
+
+        //Obtener la cita con el id 
+        const cita = await Cita.findById(citaId);
+
+        if (cita.fecha <= ahora && cita.hora <= ahora.toTimeString().slice(0,5)) {
+            await Cita.findByIdAndUpdate(req.params.id, { status: 'completada' });
+            res.redirect('/manage/gestionar-citas');
+        }
+        else {
+            res.status(400).send("Error: La cita no puede ser marcada como completada antes de su hora programada.");
+        }
+
+    } catch (error) {
+        res.status(500).send("Error al marcar la cita como completada.");
+    }
+});
 module.exports = router;

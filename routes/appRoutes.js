@@ -124,6 +124,16 @@ router.post('/agendar', async (req, res) => {
         if (citaExistente) {
             return res.status(409).send("Error: Esa hora acaba de ser reservada. Por favor, elige otro horario.");
         }
+
+        //Validación para que un paciente no pueda agendar dos citas al mismo tiempo
+        const citaPaciente = await Cita.findOne({
+            paciente: pacienteId,
+            fecha: new Date(date),
+            hora: time
+        });
+        if (citaPaciente) {
+            return res.status(409).send("Error: Usted ya tiene una cita agendada para esa fecha y hora.");
+        }
         
         // Crear y guardar la nueva cita
         const nuevaCita = new Cita({
@@ -415,6 +425,50 @@ router.get('/medico/dashboard', async (req, res) => {
     }
 });
 
+
+// RUTA: Historial de Citas Completadas con Buscador
+router.get('/medico/citas-completadas', async (req, res) => {
+    try {
+        const medicoId = req.session.userId;
+        const busqueda = req.query.search || ''; // Lo que escribe el doctor
+
+        // 1. Definimos la condición base: Citas de ESTE médico y que ya PASARON
+        let filtroCitas = {
+            medico: medicoId,
+            fecha: { $lt: new Date() } // $lt = Less Than (Menor que hoy)
+        };
+
+        // 2. Si hay búsqueda, filtramos por paciente
+        if (busqueda) {
+            // Buscamos usuarios (pacientes) que coincidan con el nombre
+            const pacientesEncontrados = await Usuario.find({
+                role: 'paciente',
+                nombre: { $regex: busqueda, $options: 'i' } // 'i' ignora mayúsculas/minúsculas
+            }).select('_id');
+
+            // Extraemos solo los IDs
+            const idsPacientes = pacientesEncontrados.map(p => p._id);
+
+            // Agregamos al filtro: la cita debe ser de uno de estos pacientes
+            filtroCitas.paciente = { $in: idsPacientes };
+        }
+
+        // 3. Buscamos las citas con el filtro final
+        const citas = await Cita.find(filtroCitas)
+            .populate('paciente', 'nombre email telefono fotoPerfil')
+            .sort({ fecha: -1, hora: -1 }); // Ordenar: las más recientes primero
+
+        // 4. Renderizamos la vista
+        res.render('medico/citas-completadas', {
+            citas: citas,
+            busqueda: busqueda // Para mantener el texto en el input
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error al cargar el historial.");
+    }
+});
 
 // --- RUTAS DE RECEPCIONISTA ---
 

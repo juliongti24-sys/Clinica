@@ -5,6 +5,9 @@
             <p style="font-size: 1.2rem; margin-top: -1rem; margin-bottom: 2rem;">
                 Bienvenido, Dr. <%= usuario.nombre.split(' ')[0] %>
             </p>
+            <a href="/medico/citas-completadas" class="btn btn-secondary" style="margin-bottom: 2rem;">
+        📂 Ver Historial de Citas
+    </a>
         </div>
 
         <h2 class="section-title">Citas de Hoy (<%= new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }) %>)</h2>

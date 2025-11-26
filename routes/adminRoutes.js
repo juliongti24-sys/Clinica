@@ -113,7 +113,6 @@ router.post('/editar-usuario/:id', upload.single('foto'), async (req, res) => {
 });
 
 // RUTA PARA ELIMINAR UN USUARIO (DELETE)
-// RUTA ACTUALIZADA: POST /eliminar-usuario/:id
 router.post('/eliminar-usuario/:id', async (req, res) => {
     const id = req.params.id;
     const adminId = req.session.userId; // ID del admin que está haciendo la acción

@@ -1,0 +1,66 @@
+<%- include('../templates/header') %>
+
+<main>
+    <section class="container page-section">
+        <div class="dashboard-header">
+            <h1 class="page-title">Historial de Citas</h1>
+            <a href="/medico/dashboard" class="btn btn-secondary">Volver a la Agenda</a>
+        </div>
+
+        <div class="card" style="margin-bottom: 2rem; padding: 1.5rem;">
+            <form action="/medico/citas-completadas" method="GET" style="display: flex; gap: 10px;">
+                <input type="text" name="search" class="form-control" 
+                       placeholder="Buscar por nombre del paciente..." 
+                       value="<%= busqueda %>">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+                <% if (busqueda) { %>
+                    <a href="/medico/citas-completadas" class="btn btn-secondary">Limpiar</a>
+                <% } %>
+            </form>
+        </div>
+
+        <div class="appointment-list">
+            <% if (citas && citas.length > 0) { %>
+                <% citas.forEach(cita => { %>
+                    <div class="card appointment-card past" style="display: flex; align-items: center; gap: 1rem;">
+                        
+                        <div style="flex-shrink: 0;">
+                            <% if (cita.paciente) { %>
+                                <img src="/images/<%= cita.paciente.fotoPerfil || 'default.jpg' %>" 
+                                     alt="Foto" 
+                                     style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #ddd;">
+                            <% } else { %>
+                                <div style="width: 60px; height: 60px; border-radius: 50%; background: #eee;"></div>
+                            <% } %>
+                        </div>
+
+                        <div class="appointment-details" style="flex-grow: 1;">
+                            <p class="appointment-date">
+                                <%= new Date(cita.fecha).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }) %>
+                                - <strong><%= cita.hora %></strong>
+                            </p>
+                            
+                            <% if (cita.paciente) { %>
+                                <p class="appointment-doctor" style="font-size: 1.2rem;"><%= cita.paciente.nombre %></p>
+                                <p class="appointment-specialty" style="color: #666;">Motivo: <%= cita.motivo || 'No especificado' %></p>
+                            <% } else { %>
+                                <p class="appointment-doctor" style="color: red;">(Paciente Eliminado)</p>
+                            <% } %>
+                        </div>
+
+                        <div class="appointment-actions">
+                            <span class="btn btn-sm btn-secondary disabled">Completada</span>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div style="text-align: center; padding: 2rem; color: #666;">
+                    <p>No se encontraron citas completadas con ese criterio.</p>
+                </div>
+            <% } %>
+        </div>
+
+    </section>
+</main>
+
+<%- include('../templates/footer') %>

@@ -28,10 +28,46 @@
                     <label for="telefono">Teléfono</label>
                     <input type="tel" id="telefono" name="telefono" class="form-control" value="<%= u.telefono %>" required>
                 </div>
+                
+                <div class="form-group">
+                    <label for="role">Rol</label>
+                    <select name="role" id="role" class="form-control" value="<%= u.telefono %>" required>
+                        <% if(u.role === 'medico') { %>
+                                <option value="medico" selected>Médico</option>
+                        <% } %>
+
+                        <% if(u.role === 'recepcionista') { %>
+                                <option value="recepcionista" selected>Recepcionista</option>
+                        <% } %>
+
+                        <% if (u.role === 'administrador') { %>
+                                <option value="administrador" selected>Administrador</option>
+                        <% } %>
+
+                        <% if(u.role === 'paciente') {%>
+                                <option value="paciente" selected>Paciente</option>
+                        <% } %>
+                        <option value="medico">Médico</option>
+                        <option value="paciente">Paciente</option>
+                        <option value="administrador">Administrador</option>
+                        <option value="recepcionista">Recepcionista</option>
+                    </select>
+                </div>
+            
+            <div class="form-group" id="esp" display="none">
+                <label for="especialidad">Especialidad</label>
+                <input type="text" id="especialidad" name="especialidad" class="form-control" value="<%= u.especialidad %>" required>
+            </div>
+
+            <div class="form-group" id="ced" display="none">
+                <label for="cedula">Cédula</label>
+                <input type="text" id="cedula" name="cedula" class="form-control" value="<%= u.cedula %>" required>
+            </div>
             <div class="form-group">
                 <label for="foto">Foto de perfil</label>
                 <input type="file" name = "foto" id="foto" class="form-control mb-3" required>
             </div>
+
 
                 <div style="margin-top: 1.5rem; display: flex; justify-content: space-between;">
                     <a href="/admin/gestionar-usuarios" class="btn btn-secondary">Cancelar</a>
@@ -41,5 +77,25 @@
         </div>
     </section>
 </main>
+<script>
+    // JAVASCRIPT PARA MOSTRAR LA ESPECIALIDAD Y CEDULA SOLO SI EL ROL ES MEDICO
+    document.addEventListener('DOMContentLoaded', function() {
+        var role = document.getElementById('role');
+        var especialidadDiv = document.getElementById('esp');
+        var cedulaDiv = document.getElementById('ced');
 
+        function mostrarCampos() {
+            if (role.value === 'medico') {
+                especialidadDiv.style.display = 'block';
+                cedulaDiv.style.display = 'block';
+            } else {
+                especialidadDiv.style.display = 'none';
+                cedulaDiv.style.display = 'none';
+            }
+        }
+
+        role.addEventListener('change', mostrarCampos);
+        mostrarCampos(); // Initial call to set the correct display on page load
+    });
+</script>
 <%- include('../templates/footer') %>

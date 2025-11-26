@@ -24,6 +24,11 @@ const citaSchema = new Schema({
     motivo: {
         type: String,
         trim: true
+    },
+    status: {
+        type: String,
+        enum: ['pendiente', 'confirmada', 'cancelada', 'completada'],
+        default: 'pendiente'
     }
 }, { timestamps: true });
 
